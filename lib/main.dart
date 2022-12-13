@@ -1,4 +1,6 @@
+import 'package:color_box_game/bloc/cubit/game_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'home_p.dart';
 
@@ -9,8 +11,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return BlocProvider(
+      create: (context) => GameCubit()..init(),
+      child: MaterialApp(home: HomePage()),
     );
   }
 }

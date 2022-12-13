@@ -54,3 +54,25 @@ class Box {
   @override
   int get hashCode => index.hashCode;
 }
+
+final List<Color> colors = [
+  Colors.green,
+  Colors.purple,
+  Colors.red,
+  Colors.blue,
+  Colors.grey,
+  Colors.orange,
+  Colors.pink,
+  Colors.indigo,
+  Colors.green,
+  Colors.purple,
+  Colors.red,
+  Colors.blue,
+  Colors.grey,
+  Colors.orange,
+  Colors.pink,
+  Colors.indigo,
+];
+List<Box> boxes = <Box>[];
+List<Box> selectedBoxes = <Box>[];
+List<Box> selectingBoxes = <Box>[];
