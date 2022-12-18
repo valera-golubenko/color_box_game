@@ -64,7 +64,7 @@ final List<Color> colors = [
   Colors.orange,
   Colors.pink,
   Colors.indigo,
-  Colors.green,
+  Color(0xFF4CAF50),
   Colors.purple,
   Colors.red,
   Colors.blue,
@@ -73,6 +73,3 @@ final List<Color> colors = [
   Colors.pink,
   Colors.indigo,
 ];
-List<Box> boxes = <Box>[];
-List<Box> selectedBoxes = <Box>[];
-List<Box> selectingBoxes = <Box>[];
