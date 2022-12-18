@@ -5,26 +5,27 @@ import 'package:meta/meta.dart';
 part 'game_state.dart';
 
 class GameCubit extends Cubit<GameState> {
-  GameCubit() : super(GameInitial());
+  GameCubit() : super(GameState());
 
   Future<void> init() async {
-    emit(GameLoading());
-    await Future.delayed(const Duration(seconds: 1));
-    emit(GameLoaded());
     setIndexColorList();
     setBlackColor();
   }
 
   void setIndexColorList() {
-    boxes = List.generate(colors.length, (index) {
+    final boxes = List.generate(colors.length, (index) {
       final color = colors[index];
       return Box(index: index, randomColor: color);
     });
+
+    final newState = state.copyWidth(boxes: boxes);
+    emit(newState);
   }
 
   void setBlackColor() async {
     await Future.delayed(const Duration(seconds: 4));
-    boxes = boxes
+
+    final boxes = state.boxes
         .map((box) => box.copyWidth(
               status: StatusBox.hidden,
             ))
@@ -34,52 +35,51 @@ class GameCubit extends Cubit<GameState> {
   void boxTap(Box box) async {
     if (box.status == StatusBox.selected) return;
 
-    if (selectingBoxes.length >= 2) {
+    if (state.selectingBoxes.length >= 2) {
       _resetAnSelectedColors();
     }
     _selectBox(box);
 
-    // setState(() {});
-
     await Future.delayed(const Duration(seconds: 1));
 
-    if (selectingBoxes.length < 2) return;
+    if (state.selectingBoxes.length < 2) return;
     _checkSelections();
     _resetAnSelectedColors();
+    emit(state);
     // setState(() {});
   }
 
   void _resetAnSelectedColors() {
-    boxes = boxes.map((box) {
-      final isSelected = selectedBoxes.contains(box);
+    final boxes = state.boxes.map((box) {
+      final isSelected = state.selectedBoxes.contains(box);
       if (isSelected) return box.copyWidth(status: StatusBox.selected);
 
       return box.copyWidth(status: StatusBox.hidden);
     }).toList();
 
-    selectingBoxes.clear();
+    state.selectingBoxes.clear();
   }
 
   void _selectBox(Box tappedBox) {
-    boxes = boxes.map((box) {
+    final boxes = state.boxes.map((box) {
       final isTapped = tappedBox == box;
       if (!isTapped) return box;
 
       return box.copyWidth(status: StatusBox.selecting);
     }).toList();
 
-    selectingBoxes.add(tappedBox);
+    state.selectingBoxes.add(tappedBox);
   }
 
   void _checkSelections() {
     final selectingColors =
-        selectingBoxes.map((box) => box.randomColor).toSet();
+        state.selectingBoxes.map((box) => box.randomColor).toSet();
     final isApprove = selectingColors.length == 1;
 
     if (isApprove) {
-      selectedBoxes.addAll(selectingBoxes);
+      state.selectedBoxes.addAll(state.selectingBoxes);
     } else {
-      selectingBoxes.clear();
+      state.selectingBoxes.clear();
     }
   }
 }
