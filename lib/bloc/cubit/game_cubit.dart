@@ -30,6 +30,8 @@ class GameCubit extends Cubit<GameState> {
               status: StatusBox.hidden,
             ))
         .toList();
+    final newState = state.copyWidth(boxes: boxes);
+    emit(newState);
   }
 
   void boxTap(Box box) async {
@@ -45,8 +47,8 @@ class GameCubit extends Cubit<GameState> {
     if (state.selectingBoxes.length < 2) return;
     _checkSelections();
     _resetAnSelectedColors();
-    emit(state);
-    // setState(() {});
+    //emit(state);
+    //setState(() {});
   }
 
   void _resetAnSelectedColors() {
@@ -58,6 +60,8 @@ class GameCubit extends Cubit<GameState> {
     }).toList();
 
     state.selectingBoxes.clear();
+    final newState = state.copyWidth(boxes: []);
+    emit(newState);
   }
 
   void _selectBox(Box tappedBox) {
@@ -67,7 +71,8 @@ class GameCubit extends Cubit<GameState> {
 
       return box.copyWidth(status: StatusBox.selecting);
     }).toList();
-
+    final newState = state.copyWidth(boxes: boxes);
+    emit(newState);
     state.selectingBoxes.add(tappedBox);
   }
 
