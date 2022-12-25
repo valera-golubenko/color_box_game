@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bloc/bloc.dart';
 import 'package:color_box_game/model.dart';
 import 'package:meta/meta.dart';
@@ -5,21 +7,24 @@ import 'package:meta/meta.dart';
 part 'game_state.dart';
 
 class GameCubit extends Cubit<GameState> {
-  GameCubit() : super(GameState());
+  GameCubit() : super(const GameState());
 
-  Future<void> init() async {
+  Future<void> init(List<Color> colors) async {
+    final colorsSet = {...colors};
+    final shuffledColors = [...colorsSet, ...colorsSet];
+    shuffledColors.shuffle();
+    emit(state.copyWidth(colors: shuffledColors));
     setIndexColorList();
     setBlackColor();
   }
 
   void setIndexColorList() {
-    final boxes = List.generate(colors.length, (index) {
-      final color = colors[index];
+    final boxes = List.generate(state.colors.length, (index) {
+      final color = state.colors[index];
       return Box(index: index, randomColor: color);
     });
 
-    final newState = state.copyWidth(boxes: boxes);
-    emit(newState);
+    emit(state.copyWidth(boxes: boxes));
   }
 
   void setBlackColor() async {
@@ -30,8 +35,7 @@ class GameCubit extends Cubit<GameState> {
               status: StatusBox.hidden,
             ))
         .toList();
-    final newState = state.copyWidth(boxes: boxes);
-    emit(newState);
+    emit(state.copyWidth(boxes: boxes));
   }
 
   void boxTap(Box box) async {
@@ -47,21 +51,21 @@ class GameCubit extends Cubit<GameState> {
     if (state.selectingBoxes.length < 2) return;
     _checkSelections();
     _resetAnSelectedColors();
-    //emit(state);
-    //setState(() {});
   }
 
   void _resetAnSelectedColors() {
     final boxes = state.boxes.map((box) {
       final isSelected = state.selectedBoxes.contains(box);
-      if (isSelected) return box.copyWidth(status: StatusBox.selected);
+      if (isSelected) {
+        return box.copyWidth(status: StatusBox.selected);
+      }
 
       return box.copyWidth(status: StatusBox.hidden);
     }).toList();
-
-    state.selectingBoxes.clear();
-    final newState = state.copyWidth(boxes: []);
-    emit(newState);
+    emit(state.copyWidth(
+      boxes: boxes,
+      selectingBoxes: [],
+    ));
   }
 
   void _selectBox(Box tappedBox) {
@@ -71,9 +75,11 @@ class GameCubit extends Cubit<GameState> {
 
       return box.copyWidth(status: StatusBox.selecting);
     }).toList();
-    final newState = state.copyWidth(boxes: boxes);
-    emit(newState);
-    state.selectingBoxes.add(tappedBox);
+
+    emit(state.copyWidth(
+      boxes: boxes,
+      selectingBoxes: [...state.selectingBoxes, tappedBox],
+    ));
   }
 
   void _checkSelections() {
@@ -82,9 +88,14 @@ class GameCubit extends Cubit<GameState> {
     final isApprove = selectingColors.length == 1;
 
     if (isApprove) {
-      state.selectedBoxes.addAll(state.selectingBoxes);
+      emit(state.copyWidth(
+        selectedBoxes: [
+          ...state.selectedBoxes,
+          ...state.selectingBoxes,
+        ],
+      ));
     } else {
-      state.selectingBoxes.clear();
+      emit(state.copyWidth(selectingBoxes: []));
     }
   }
 }
