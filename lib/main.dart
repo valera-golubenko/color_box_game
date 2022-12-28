@@ -14,7 +14,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => GameCubit()..init(AppConstants.colors),
-      child: const MaterialApp(home: HomePage()),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
+      ),
     );
   }
 }
