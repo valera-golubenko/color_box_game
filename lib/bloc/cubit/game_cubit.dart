@@ -75,16 +75,21 @@ class GameCubit extends Cubit<GameState> {
 
       return box.copyWidth(status: StatusBox.selecting);
     }).toList();
-
+    final findColor = state.selectedBoxes.map((e) => e.randomColor).toSet();
     emit(state.copyWidth(
       boxes: boxes,
       selectingBoxes: [...state.selectingBoxes, tappedBox],
+      findColors: findColor,
     ));
   }
 
   void _checkSelections() {
     final selectingColors =
         state.selectingBoxes.map((box) => box.randomColor).toSet();
+    //final findColor = state.selectedBoxes.map((e) => e.randomColor).toSet();
+    // emit(state.copyWidth(
+    //   findColors: findColor,
+    // ));
     final isApprove = selectingColors.length == 1;
 
     if (isApprove) {

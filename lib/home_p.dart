@@ -9,130 +9,130 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int stepCounter = 0;
+
     return BlocBuilder<GameCubit, GameState>(
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Color(0xFF2A2928),
-          appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: Color(0xFF605E5D),
-            title: const Text('Magic Cube'),
+        return Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/img/bg1.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(10),
-            child: ListView(
-              children: [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF605E5D),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  'Ходов: $stepCounter',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              centerTitle: true,
+              backgroundColor: Color(0x95682808),
+              title: const Text(
+                'MAGIC CUBE',
+                style: TextStyle(
+                  color: Color(0xFF0B3353),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(10),
+              child: ListView(
+                children: [
+                  Row(
+                      children: state.findColors
+                          .map(
+                            (e) => Container(
+                              width: 20,
+                              height: 20,
+                              margin: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: e,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF605E5D),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  'Совпадений: $stepCounter',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      )
-                    ]),
-                const SizedBox(height: 30),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Color(0xFFECE8E5),
-                      style: BorderStyle.solid,
-                      width: 3,
-                    ),
-                  ),
-                  padding: EdgeInsets.all(10),
-                  //color: Color(0xFF605E5D),
-                  child: Wrap(
-                      runSpacing: 15,
-                      alignment: WrapAlignment.spaceBetween,
-                      children: state.boxes.map((e) {
-                        return InkWell(
-                          onTap: () {
-                            context.read<GameCubit>().boxTap(e);
-                            stepCounter++;
-                          },
-                          child: Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: e.color,
-                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ),
-                        );
-                      }).toList()),
-                ),
-                const SizedBox(height: 80),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF605E5D),
-                          borderRadius: BorderRadius.circular(20),
+                          )
+                          .toList()),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Color(0x95682808),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                'Ходов: $stepCounter',
+                                style: const TextStyle(
+                                  color: Color(0xFF0B3353),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        child: const Text('START'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Color(0xC7332D29),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                'Совпадений: ${state.selectedBoxes.length ~/ 2}',
+                                style: const TextStyle(
+                                  color: Color.fromARGB(255, 161, 166, 170),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
+                  ]),
+                  const SizedBox(height: 30),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Color(0xC7332D29),
+                      border: Border.all(
+                        color: Color(0xC7322808),
+                        style: BorderStyle.solid,
+                        width: 3,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF605E5D),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text('RESTART'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    padding: EdgeInsets.all(10),
+                    //color: Color(0xFF605E5D),
+                    child: Wrap(
+                        runSpacing: 15,
+                        alignment: WrapAlignment.spaceBetween,
+                        children: state.boxes.map((e) {
+                          return InkWell(
+                            onTap: () {
+                              context.read<GameCubit>().boxTap(e);
+                              stepCounter++;
+                            },
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: e.color,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          );
+                        }).toList()),
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         );
